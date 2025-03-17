@@ -1,0 +1,14 @@
+.center-table {
+  margin: 0 auto 25px;
+  text-align: center; /* Center text within cells */
+}
+
+.center-table th,
+.center-table td {
+  text-align: center; /* Ensure text is centered in table cells */
+  color: rgba(33, 37, 41, 0.75);
+}
+
+.center-table tbody {
+  color: rgba(33, 37, 41, 0.75);
+}

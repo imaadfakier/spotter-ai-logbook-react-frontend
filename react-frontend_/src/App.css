@@ -1,0 +1,18 @@
+body {
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  background-color: #d2b48c !important; /* Light brown (Tan) */
+  color: white !important; /* Ensure text is readable against the background */
+  font-family: "Bebas Neue", sans-serif !important; /* Optional: Choose a suitable font */
+}
+
+::placeholder {
+  color: black !important;
+  opacity: 1; /* Ensures full color visibility */
+}
+
+#map {
+  /* height: 100%; */
+  margin: 25px auto 25px auto;
+}
