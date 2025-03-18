@@ -176,7 +176,7 @@ const MapComponent = ({ logsData, tripId }) => {
               const dropoff = dropoffCoords.join(",");
 
               const response = await fetch(
-                `https://https://spotterailogbook-production.up.railway.app/api/get-osrm-route/?start=${start}&via=${pickup}&end=${dropoff}`
+                `https://spotterailogbook-production.up.railway.app/api/get-osrm-route/?start=${start}&via=${pickup}&end=${dropoff}`
               );
               const data = await response.json();
 
