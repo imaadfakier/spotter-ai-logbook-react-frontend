@@ -154,13 +154,11 @@ const MapComponent = ({ logsData, tripId }) => {
           // Rate Limiting - COMMENTED OUT
           // if (requestCount >= MAX_REQUESTS_PER_MINUTE || isRateLimited) {
           //   setIsRateLimited(true);
-          //   console.warn("Rate limit exceeded.  Cannot create routing.");
           //   return;
           // }
 
           // Retry Mechanism - COMMENTED OUT
           // if (retryCount >= MAX_RETRIES) {
-          //   console.error("Max retries reached.  Cannot create routing.");
           //   return;
           // }
 
@@ -180,28 +178,30 @@ const MapComponent = ({ logsData, tripId }) => {
               );
               const data = await response.json();
 
-              if (data.routes && data.routes.length > 0) {
-                return data.routes[0].geometry.coordinates;
+              // Ensure routes exist and then directly extract waypoints
+              if (data.waypoints && data.waypoints.length > 0) {
+                const waypoints = data.waypoints; // Extract the waypoints array
+
+                // Ensure the waypoints array contains the expected 3 locations
+                if (waypoints && waypoints.length === 3) {
+                  const coordinates = waypoints.map((wp) =>
+                    L.latLng(wp.location[1], wp.location[0])
+                  ); // Reverse lat/lng
+
+                  return coordinates; // Return the extracted coordinates
+                } else {
+                  return [];
+                }
               } else {
-                console.error("No route found");
                 return [];
               }
             } catch (error) {
-              console.error("Error fetching route:", error);
               return [];
             }
           };
 
           // Function to update the route on the map
           const updateRouteOnMap = async () => {
-            // const startCoords = [-80.1936, 25.7742];
-            // const pickupCoords = [-81.379, 28.5421];
-            // const dropoffCoords = [-81.6556, 30.3322];
-
-            // const startCoords = startCoords;
-            // const pickupCoords = pickupCoords;
-            // const dropoffCoords = dropoffCoords;
-
             const routeCoordinates = await fetchRoute(
               startCoords,
               pickupCoords,
@@ -209,17 +209,18 @@ const MapComponent = ({ logsData, tripId }) => {
             );
 
             if (routeCoordinates.length > 0) {
-              const latLngs = routeCoordinates.map((coord) =>
-                L.latLng(coord[1], coord[0])
-              ); // Convert [long, lat] to [lat, long]
-
+              // Use the new waypoints directly in the Routing Control
               L.Routing.control({
-                waypoints: latLngs,
+                waypoints: [
+                  L.latLng(startCoords), // Start coordinates
+                  L.latLng(pickupCoords), // Pickup coordinates
+                  L.latLng(dropoffCoords), // Dropoff coordinates
+                ],
                 routeWhileDragging: false,
                 showAlternatives: false,
+                serviceUrl: "http://router.project-osrm.org/route/v1",
               }).addTo(map);
             } else {
-              console.error("Route not available.");
             }
           };
 
