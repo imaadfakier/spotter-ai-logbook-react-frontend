@@ -22,7 +22,8 @@ function App() {
       return newObj;
     };
 
-    const apiUrl = "http://localhost:8000/api/trips/"; //Django server endpoint
+    const apiUrl =
+      "https://spotterailogbook-production.up.railway.app/api/trips"; //Django server endpoint
     try {
       // First, check if trip exists
       const checkTripResponse = await fetch(`${apiUrl}check_existing/`, {
