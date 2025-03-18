@@ -23,7 +23,7 @@ function App() {
     };
 
     const apiUrl =
-      "https://spotterailogbook-production.up.railway.app/api/trips"; //Django server endpoint
+      "https://spotterailogbook-production.up.railway.app/api/trips/"; //Django server endpoint
     try {
       // First, check if trip exists
       const checkTripResponse = await fetch(`${apiUrl}check_existing/`, {
