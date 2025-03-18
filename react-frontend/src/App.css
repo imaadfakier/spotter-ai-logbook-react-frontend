@@ -12,6 +12,39 @@ body {
   opacity: 1; /* Ensures full color visibility */
 }
 
+/* App.css */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent background */
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none; /* Allow scrolling in the background */
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-container p {
+  margin-top: 10px;
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 0;
+}
+
 #map {
   /* height: 100%; */
   margin: 25px auto 25px auto;

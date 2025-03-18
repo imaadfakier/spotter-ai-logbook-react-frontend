@@ -9,16 +9,27 @@ const TripForm = ({ onSubmit }) => {
   const [dropoffLocation, setDropoffLocation] = useState("");
   const [currentCycleHours, setCurrentCycleHours] = useState(0);
   const [startDate, setStartDate] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false); // For loader
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Validation
+    if (!startLocation || !pickupLocation || !dropoffLocation || !startDate) {
+      alert("Please fill out all fields.");
+      return;
+    }
+
     const formattedDate = moment(startDate).format("YYYY-MM-DD");
+    setIsSubmitting(true); // Show loader
     onSubmit({
       startLocation,
       pickupLocation,
       dropoffLocation,
       currentCycleHours,
       startDate: formattedDate,
+    }).finally(() => {
+      setIsSubmitting(false); // Hide loader after routing process is done
     });
   };
 
@@ -43,6 +54,7 @@ const TripForm = ({ onSubmit }) => {
                 value={startLocation}
                 className="p-3 text-dark"
                 onChange={(e) => setStartLocation(e.target.value)}
+                disabled={isSubmitting} // Disable when submitting
               />
             </Form.Group>
 
@@ -54,6 +66,7 @@ const TripForm = ({ onSubmit }) => {
                 value={pickupLocation}
                 className="p-3 text-dark"
                 onChange={(e) => setPickupLocation(e.target.value)}
+                disabled={isSubmitting} // Disable when submitting
               />
             </Form.Group>
 
@@ -65,6 +78,7 @@ const TripForm = ({ onSubmit }) => {
                 value={dropoffLocation}
                 className="p-3 text-dark"
                 onChange={(e) => setDropoffLocation(e.target.value)}
+                disabled={isSubmitting} // Disable when submitting
               />
             </Form.Group>
 
@@ -80,6 +94,7 @@ const TripForm = ({ onSubmit }) => {
                 onChange={(e) =>
                   setCurrentCycleHours(parseFloat(e.target.value))
                 }
+                disabled={isSubmitting} // Disable when submitting
               />
             </Form.Group>
 
@@ -91,10 +106,16 @@ const TripForm = ({ onSubmit }) => {
                 value={startDate}
                 className="p-3 text-dark"
                 onChange={(e) => setStartDate(e.target.value)}
+                disabled={isSubmitting} // Disable when submitting
               />
             </Form.Group>
 
-            <Button variant="primary" type="submit" className="w-100 p-3">
+            <Button
+              variant="primary"
+              type="submit"
+              className="w-100 p-3"
+              disabled={isSubmitting}
+            >
               Generate Logs
             </Button>
           </Form>

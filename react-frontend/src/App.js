@@ -3,13 +3,16 @@ import MapComponent from "./MapComponent";
 import "./App.css";
 import DailyLogSheet from "./DailyLogSheet";
 import TripForm from "./TripForm";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Spinner } from "react-bootstrap";
 
 function App() {
   const [logEntries, setLogEntries] = useState([]);
   const [tripDetails, setTripDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Loader state
 
   const handleFormSubmit = async (tripData) => {
+    setIsLoading(true); // Start loading
+
     // Convert camelCase keys to snake_case
     const convertToSnakeCase = (obj) => {
       const newObj = {};
@@ -111,7 +114,10 @@ function App() {
         const logsData = await logsDataResponse.json();
         setLogEntries(logsData);
       }
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setIsLoading(false); // End loading
+    }
   };
 
   return (
@@ -120,7 +126,10 @@ function App() {
       <hr />
       <Row>
         <Col md={12} className="mt-4 mb-5">
-          <TripForm onSubmit={handleFormSubmit} />
+          <TripForm
+            onSubmit={handleFormSubmit}
+            isSubmitting={isLoading} // Pass the loading state
+          />
         </Col>
         {tripDetails && <hr />}
         <Col md={12}>
@@ -141,6 +150,16 @@ function App() {
           {logEntries.length > 0 && <DailyLogSheet logEntries={logEntries} />}
         </Col>
       </Row>
+
+      {/* Loader Overlay */}
+      {isLoading && (
+        <div className="overlay">
+          <div className="spinner-container">
+            <Spinner animation="border" size="lg" variant="dark" />
+            <p className="text-muted">Processing</p>
+          </div>
+        </div>
+      )}
     </Container>
   );
 }
