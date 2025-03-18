@@ -164,16 +164,68 @@ const MapComponent = ({ logsData, tripId }) => {
           //   return;
           // }
 
-          L.Routing.control({
-            waypoints: [
-              L.latLng(startCoords),
-              L.latLng(pickupCoords),
-              L.latLng(dropoffCoords),
-            ],
-            routeWhileDragging: false,
-            showAlternatives: false,
-            serviceUrl: "http://router.project-osrm.org/route/v1",
-          }).addTo(map);
+          // Function to fetch route from the backend
+          const fetchRoute = async (
+            startCoords,
+            pickupCoords,
+            dropoffCoords
+          ) => {
+            try {
+              const start = startCoords.join(",");
+              const pickup = pickupCoords.join(",");
+              const dropoff = dropoffCoords.join(",");
+
+              const response = await fetch(
+                `https://https://spotterailogbook-production.up.railway.app/api/get-osrm-route/?start=${start}&via=${pickup}&end=${dropoff}`
+              );
+              const data = await response.json();
+
+              if (data.routes && data.routes.length > 0) {
+                return data.routes[0].geometry.coordinates;
+              } else {
+                console.error("No route found");
+                return [];
+              }
+            } catch (error) {
+              console.error("Error fetching route:", error);
+              return [];
+            }
+          };
+
+          // Function to update the route on the map
+          const updateRouteOnMap = async () => {
+            // const startCoords = [-80.1936, 25.7742];
+            // const pickupCoords = [-81.379, 28.5421];
+            // const dropoffCoords = [-81.6556, 30.3322];
+
+            // const startCoords = startCoords;
+            // const pickupCoords = pickupCoords;
+            // const dropoffCoords = dropoffCoords;
+
+            const routeCoordinates = await fetchRoute(
+              startCoords,
+              pickupCoords,
+              dropoffCoords
+            );
+
+            if (routeCoordinates.length > 0) {
+              const latLngs = routeCoordinates.map((coord) =>
+                L.latLng(coord[1], coord[0])
+              ); // Convert [long, lat] to [lat, long]
+
+              L.Routing.control({
+                waypoints: latLngs,
+                routeWhileDragging: false,
+                showAlternatives: false,
+              }).addTo(map);
+            } else {
+              console.error("Route not available.");
+            }
+          };
+
+          // Trigger route generation (can be called in response to user interaction)
+          updateRouteOnMap();
+
           //  setRequestCount(requestCount + 1);
         }
 
