@@ -218,7 +218,7 @@ const MapComponent = ({ logsData, tripId }) => {
                 ],
                 routeWhileDragging: false,
                 showAlternatives: false,
-                serviceUrl: "http://router.project-osrm.org/route/v1",
+                serviceUrl: "https://router.project-osrm.org/route/v1",
               }).addTo(map);
             } else {
             }
